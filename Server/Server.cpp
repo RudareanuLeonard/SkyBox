@@ -17,7 +17,7 @@ void Server::start_server(){
     
     int sockfd = socket(this->server_addrinfo.ai_family, this->server_addrinfo.ai_socktype, this->server_addrinfo.ai_protocol);
 
-    int check_bind = bind(sockfd, (struct sockaddr *)&server_sockaddr_in, 4);
+    int check_bind = bind(sockfd, (struct sockaddr *)&server_sockaddr_in, sizeof(server_sockaddr_in));
 
     if(check_bind < 0){
         std::cout << "Bind failed!\n";
@@ -40,4 +40,6 @@ int main(void){
     Server server;
 
     server.start_server();
+
+    std::cout << "Server closed!";
 }
