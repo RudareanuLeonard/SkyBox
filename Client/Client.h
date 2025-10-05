@@ -5,8 +5,10 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#include "/home/vox/Desktop/cpp/SkyBox/Server/Server.h"
 
-const int PORT = 8080;
+extern const int PORT;
+
 
 class Client{
     private:
@@ -17,5 +19,6 @@ class Client{
     public:
         Client();
 
-        void connect_to_server();
+        void connect_to_server(Server server);
+        
 };

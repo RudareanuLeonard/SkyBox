@@ -7,7 +7,9 @@
 #include <netdb.h>
 
 const std::string LOCALHOST = "127.0.0.1";
+
 const int PORT = 8080;
+
 const int BACKLOG = 5;
 
 //addrinfo
@@ -22,5 +24,6 @@ class Server{
     public:
     Server();
     void start_server();
+    sockaddr* get_ai_addr();
 
 };

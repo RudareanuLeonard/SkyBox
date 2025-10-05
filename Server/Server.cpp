@@ -3,8 +3,8 @@
 Server::Server(){
     std::cout << "This is my Server class constructor\n";
     server_sockaddr_in.sin_family = AF_INET;
-    server_sockaddr_in.sin_addr.s_addr = inet_addr("127.0.0.1");
-    server_sockaddr_in.sin_port = PORT;
+    server_sockaddr_in.sin_addr.s_addr = INADDR_ANY;
+    server_sockaddr_in.sin_port = htons(PORT);
 
     server_addrinfo.ai_family = AF_INET;
     server_addrinfo.ai_socktype = SOCK_STREAM;
@@ -12,6 +12,11 @@ Server::Server(){
     server_addrinfo.ai_addrlen = 4; //length in bytes
     server_addrinfo.ai_addr = (struct sockaddr *)&server_sockaddr_in;
 }
+
+sockaddr* Server::get_ai_addr(){
+    return this->server_addrinfo.ai_addr;
+}
+
 
 void Server::start_server(){
     
@@ -31,7 +36,10 @@ void Server::start_server(){
         std::exit(0);
     }
 
-    int client_sock = accept(sockfd, nullptr, nullptr);
+    std::cout << "client_sockaddr_in.sin_addr.s_addr = " << this->server_sockaddr_in.sin_addr.s_addr << "\n";
+
+    while(1)
+        int client_sock = accept(sockfd, nullptr, nullptr);
 }
 
 int main(void){
