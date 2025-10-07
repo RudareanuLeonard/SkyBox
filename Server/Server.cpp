@@ -38,8 +38,20 @@ void Server::start_server(){
 
     std::cout << "client_sockaddr_in.sin_addr.s_addr = " << this->server_sockaddr_in.sin_addr.s_addr << "\n";
 
-    while(1)
+
+    while(1){
         int client_sock = accept(sockfd, nullptr, nullptr);
+        if(client_sock < 0)
+            std::cout << "client_sock (accepting connection) FAILED\n";
+        else{
+            char buffer[1024];
+            std::cout <<"accepting connection is OK\n";
+            recv(client_sock, buffer, sizeof(buffer), 0);
+            std::cout << "Message from client = " << buffer << "\n";
+        }
+        
+    }
+
 }
 
 int main(void){

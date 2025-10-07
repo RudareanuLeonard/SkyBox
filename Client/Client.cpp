@@ -35,66 +35,23 @@ Server::Server(){
 
 
 void Client::connect_to_server(Server server){
+    int sockfd;
+    const addrinfo *const_client_addrinfo = &(this->client_addrinfo);
+    addrinfo *res;
+    int client_getaddrinfo = getaddrinfo(INADDR_ANY, "8080", const_client_addrinfo, &res);
 
-    int sockfd = socket(this->client_addrinfo.ai_family, this->client_addrinfo.ai_socktype, this->client_addrinfo.ai_protocol);
-    std::cout << "this->client_addrinfo.ai_family = " << this->client_addrinfo.ai_family << "    this->client_addrinfo.ai_socktype = " << this->client_addrinfo.ai_socktype << "   this->client_addrinfo.ai_protocol = " << this->client_addrinfo.ai_protocol << "\n";
+    for(addrinfo* p = res; p != NULL; p = p->ai_next){
+        sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
+        if(sockfd < 0)
+            std::cout << "sockfd failed\n";
 
-    sockaddr* server_addr = server.get_ai_addr();
-
-    if(connect(sockfd, server_addr, sizeof(server_addr)) < 0)
-        std::cerr << "Client connection failed: " << strerror(errno) << "\n";
-    else
-        std::cout << "connection successful";
-
-
-    // int sockfd;
-    
-    // const addrinfo *const_client_addrinfo = &(this->client_addrinfo);
-    // addrinfo *res;
-
-    // struct addrinfo hints{};
-
-    // // int client_getaddrinfo = getaddrinfo("127.0.0.1", "8080", &hints, &res);
-    // // std::cout << "client get addr info = " << client_getaddrinfo << "\n";
-    
-    // sockfd = socket(this->client_addrinfo.ai_family, this->client_addrinfo.ai_socktype, this->client_addrinfo.ai_protocol);
-
-    // if(sockfd < 0)
-    //     std:: cout << "sockfd failed";
-
-    // int q = connect(sockfd, this->client_addrinfo.ai_addr, this->client_addrinfo.ai_addrlen);
-
-    // if(q < 0)
-    //     std::cout << "Q conn failed";
-
-    // if(res != NULL)
-    //     std :: cout << "res not null";
-    // else
-    //     std::cout << "res is null";
-
-
-
-
-
-    // for(addrinfo *p = res; p != NULL; p = p->ai_next){
-    //     int sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
-    //     if(sockfd < 0){
-    //         std::cout << "sockfd failed\n";
-    //     }
-
-
-    //     int client_connect = connect(sockfd, p->ai_addr, p->ai_addrlen);
-
-    //     if(client_connect < 0){
-    //         // std::cout << "Client connection failed\n";
-            // std::cerr << "Client connection failed: " << strerror(errno) << "\n";
-
-    //     }
-
-    //     // std::cout << "TEST";
-    // }
-
-    // int sockfd = socket()
+        int client_connect = connect(sockfd, p->ai_addr, p->ai_addrlen);
+        if(client_connect < 0)
+            std::cout << "client_connect failed\n";
+        
+        char *message = "TEST MESSAGE";
+        send(sockfd, message, sizeof(message), 0);
+    }
 
 }
 
