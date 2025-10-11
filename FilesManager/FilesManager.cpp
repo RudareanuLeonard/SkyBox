@@ -9,14 +9,19 @@ void FilesManager::lookIntoFolder(std::string analyzed_folder_path){
     std::filesystem::path path;
     path = analyzed_folder_path;
 
-    std::cout << "path = " << path.root_directory() << "\n";
+    std::cout << "path = " << path.relative_path() << "\n";
+
+    for(const auto& file : std::filesystem::recursive_directory_iterator(path)){
+        std::cout << file << "\n";
+    }
+
 
 }
 
 int main(void){
     FilesManager fm;
 
-    std::string analyzed_folder_path = "/SkyBox/FilesManager/test";
+    std::string analyzed_folder_path = "test";
 
     fm.lookIntoFolder(analyzed_folder_path);
 }
