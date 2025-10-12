@@ -5,6 +5,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#include <thread>
 
 const std::string LOCALHOST = "127.0.0.1";
 
@@ -25,5 +26,6 @@ class Server{
     Server();
     void start_server();
     sockaddr* get_ai_addr();
+    void handle_connection(int sockfd);
 
 };

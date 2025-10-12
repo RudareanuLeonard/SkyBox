@@ -1,5 +1,5 @@
 #include "Client.h"
-
+#include <chrono>
 
 Client::Client(){
     std::cout << "This is my Client class constructor\n";
@@ -51,12 +51,24 @@ void Client::connect_to_server(Server server){
         
         char *message = "TEST MESSAGE";
         send(sockfd, message, sizeof(message), 0);
+        close(sockfd);
     }
 
 }
 
 int main(void){
-    Client client;
+    
     Server server;
-    client.connect_to_server(server);
+    
+    auto start = std::chrono::high_resolution_clock::now();
+
+    
+    for(int i = 0; i < 500; i ++){
+        Client client;
+        client.connect_to_server(server);
+    }
+
+    auto stop = std::chrono::high_resolution_clock::now();
+
+    std::cout << "\ntime took = " << stop - start;
 }

@@ -40,7 +40,26 @@ void Server::start_server(){
 
 
     while(1){
-        int client_sock = accept(sockfd, nullptr, nullptr);
+        // int client_sock = accept(sockfd, nullptr, nullptr);
+        // if(client_sock < 0)
+        //     std::cout << "client_sock (accepting connection) FAILED\n";
+        // else{
+        //     char buffer[1024];
+        //     std::cout <<"accepting connection is OK\n";
+        //     recv(client_sock, buffer, sizeof(buffer), 0);
+        //     std::cout << "Message from client = " << buffer << "\n";
+        // }
+
+        std::thread t_acc_conn(&Server::handle_connection, this, sockfd);
+        std::cout << "Before thread join";
+        t_acc_conn.join();
+        std::cout << "After thread join";
+    }
+
+}
+
+void Server::handle_connection(int sockfd){
+    int client_sock = accept(sockfd, nullptr, nullptr);
         if(client_sock < 0)
             std::cout << "client_sock (accepting connection) FAILED\n";
         else{
@@ -49,10 +68,9 @@ void Server::start_server(){
             recv(client_sock, buffer, sizeof(buffer), 0);
             std::cout << "Message from client = " << buffer << "\n";
         }
-        
-    }
-
 }
+
+
 
 int main(void){
     std::cout << "Hello, there is Server.cpp file. I am gonna start a server...\n\n";
