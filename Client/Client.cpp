@@ -50,8 +50,13 @@ void Client::connect_to_server(Server server){
             std::cout << "client_connect failed\n";
         
         char *message = "TEST MESSAGE";
+        // char *message;
+        // std::cin.getline(message, BUFFER_SIZE);
         send(sockfd, message, sizeof(message), 0);
-        close(sockfd);
+        
+
+        if(message == "4")
+            close(sockfd);
     }
 
 }
@@ -62,11 +67,13 @@ int main(void){
     
     auto start = std::chrono::high_resolution_clock::now();
 
+    Client client;
+    client.connect_to_server(server);
     
-    for(int i = 0; i < 500; i ++){
-        Client client;
-        client.connect_to_server(server);
-    }
+    // for(int i = 0; i < 500; i ++){
+    //     Client client;
+    //     client.connect_to_server(server);
+    // }
 
     auto stop = std::chrono::high_resolution_clock::now();
 

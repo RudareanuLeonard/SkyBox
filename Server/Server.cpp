@@ -25,43 +25,45 @@ void Server::start_server(){
     int check_bind = bind(sockfd, (struct sockaddr *)&server_sockaddr_in, sizeof(server_sockaddr_in));
 
     if(check_bind < 0){
-        std::cout << "Bind failed!\n";
+        // std::cout << "Bind failed!\n";
         std::exit(0);
     }
 
     int check_listen = listen(sockfd, BACKLOG);
 
     if(check_listen < 0){
-        std::cout << "Listen failed!\n";
+        // std::cout << "Listen failed!\n";
         std::exit(0);
     }
 
     std::cout << "client_sockaddr_in.sin_addr.s_addr = " << this->server_sockaddr_in.sin_addr.s_addr << "\n";
 
 
-    while(1){
-        // int client_sock = accept(sockfd, nullptr, nullptr);
-        // if(client_sock < 0)
-        //     std::cout << "client_sock (accepting connection) FAILED\n";
-        // else{
-        //     char buffer[1024];
-        //     std::cout <<"accepting connection is OK\n";
-        //     recv(client_sock, buffer, sizeof(buffer), 0);
-        //     std::cout << "Message from client = " << buffer << "\n";
-        // }
+    while(1){ // NEED TO IMPLEMENT MULTITHREADING PROPERLY
+        int client_sock = accept(sockfd, nullptr, nullptr);
+        if(client_sock < 0)
+            std::cout << "client_sock (accepting connection) FAILED\n";
+        else{
+            char buffer[1024];
+            std::cout <<"accepting connection is OK\n";
+            recv(client_sock, buffer, sizeof(buffer), 0);
+            std::cout << "Message from client = " << buffer << "\n";
+        }
 
-        std::thread t_acc_conn(&Server::handle_connection, this, sockfd);
-        std::cout << "Before thread join";
-        t_acc_conn.join();
-        std::cout << "After thread join";
+        // std::thread t_acc_conn(&Server::handle_connection, this, sockfd);
+        // std::cout << "Before thread join";
+        // t_acc_conn.detach(); // threads run independetly
+        // std::cout << "After thread join";
     }
 
 }
 
 void Server::handle_connection(int sockfd){
     int client_sock = accept(sockfd, nullptr, nullptr);
-        if(client_sock < 0)
-            std::cout << "client_sock (accepting connection) FAILED\n";
+        if(client_sock < 0){
+            // std::cout << "client_sock (accepting connection) FAILED\n";
+            std::exit(0);
+        }
         else{
             char buffer[1024];
             std::cout <<"accepting connection is OK\n";

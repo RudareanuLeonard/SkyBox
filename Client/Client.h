@@ -8,6 +8,7 @@
 #include "/home/vox/Desktop/cpp/SkyBox/Server/Server.h"
 
 extern const int PORT;
+int BUFFER_SIZE = 1024;
 
 
 class Client{
