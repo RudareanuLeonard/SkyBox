@@ -18,6 +18,35 @@ sockaddr* Server::get_ai_addr(){
 }
 
 
+void write_file(int client_sock){
+    std::ofstream ofstream_file("./test_file.txt", std::ofstream::binary);
+    char buffer[1024] = {0};
+
+    if (!ofstream_file.is_open()) {
+        std::cout << "Failed to open file\n";
+
+    }
+
+    while(true){
+        int n = recv(client_sock, buffer, sizeof(buffer), 0);
+        if(n <= 0){
+            std::cout << "No more recv \n";
+            break;
+        }
+        else{
+            std::cout << "recv received \n";
+            ofstream_file.write(buffer, n);
+        }
+
+
+    }
+
+    ofstream_file.flush();
+    ofstream_file.close();
+
+}
+
+
 void Server::start_server(){
     
     int sockfd = socket(this->server_addrinfo.ai_family, this->server_addrinfo.ai_socktype, this->server_addrinfo.ai_protocol);
@@ -46,7 +75,8 @@ void Server::start_server(){
         else{
             char buffer[1024];
             std::cout <<"accepting connection is OK\n";
-            recv(client_sock, buffer, sizeof(buffer), 0);
+            // recv(client_sock, buffer, sizeof(buffer), 0);
+            write_file(client_sock);
             std::cout << "Message from client = " << buffer << "\n";
         }
 
@@ -58,26 +88,6 @@ void Server::start_server(){
 
 }
 
-void write_file(int client_sock){
-    std::ofstream ofstream_file("test_file.txt", std::ofstream::out | std::ofstream::app | std::ofstream::binary);
-    char buffer[BUFFER_SIZE] = {0};
-
-    while(true){
-        int n = recv(client_sock, buffer, sizeof(buffer), 0);
-        if(n < 0){
-            std::cout << "No more recv \n";
-            break;
-        }
-        else{
-            ofstream_file.write(buffer, sizeof(buffer));
-        }
-
-
-    }
-    
-
-
-}
 
 void Server::handle_connection(int sockfd){
     int client_sock = accept(sockfd, nullptr, nullptr);
@@ -88,7 +98,8 @@ void Server::handle_connection(int sockfd){
         else{
             char buffer[1024];
             std::cout <<"accepting connection is OK\n";
-            recv(client_sock, buffer, sizeof(buffer), 0);
+            // recv(client_sock, buffer, sizeof(buffer), 0);
+            write_file(client_sock);
             std::cout << "Message from client = " << buffer << "\n";
         }
 }

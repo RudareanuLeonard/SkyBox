@@ -7,11 +7,13 @@
 #include <netdb.h>
 #include <fstream>
 #include "../Server/Server.h"
-#include "../File/File.h"
-
+// #include "../File/File.h"
+#include "../FilesManager/FilesManager.h"
+// #pragma once
 
 extern const int PORT;
-int BUFFER_SIZE = 1024;
+const int BUFFER_SIZE = 1024;
+
 
 
 class Client{

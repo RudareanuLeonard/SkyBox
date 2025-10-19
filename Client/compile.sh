@@ -1,7 +1,7 @@
 #! /bin/bash
 rm -rf client
 
-g++ Client.* ../File/File.* -o client
+g++ -std=c++20 Client.* ../File/File.* ../FilesManager/FilesManager.* -o client
 
 if [ $? -eq 0 ]; then
 	echo "Compiled successfully";

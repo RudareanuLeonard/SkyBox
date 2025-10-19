@@ -5,6 +5,11 @@ FilesManager::FilesManager(){
     std::cout << "This is my FilesManager constructor!\n";
 }
 
+std::vector<File> FilesManager::get_files_vector(){
+    return this->files_vector;
+}
+
+
 void FilesManager::lookIntoFolder(std::string analyzed_folder_path){
     // std::cout << "TEST";
     std::filesystem::path path;
@@ -27,6 +32,7 @@ void FilesManager::lookIntoFolder(std::string analyzed_folder_path){
             this->add_to_vector(&file_obj);
         }
     }
+
 }
 
 std::string FilesManager::last_write_time_to_string(const std::filesystem::file_time_type& ftime){
@@ -43,10 +49,10 @@ void FilesManager::add_to_vector(File *file){
     this->files_vector.push_back(*file);
 }
 
-int main(void){
-    FilesManager fm;
+// int main(void){
+//     FilesManager fm;
 
-    std::string analyzed_folder_path = "test";
+//     std::string analyzed_folder_path = "test";
 
-    fm.lookIntoFolder(analyzed_folder_path);
-}
+//     fm.lookIntoFolder(analyzed_folder_path);
+// }

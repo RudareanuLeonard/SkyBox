@@ -34,27 +34,34 @@ Server::Server(){
 }
 
 
-void Client::transfer_file(File file, int sockfd){
-    std::filesystem::directory_entry file_path = file.get_path();
+void Client::transfer_file(File file, int sockfd) {
+    std::ifstream input_file(file.get_path().path(), std::ios::binary);
 
-    std::ifstream input_file(file_path.path());
-    std::string line;
+    if (!input_file.is_open()) {
+        std::cout << "Failed to open file\n";
+    }
 
-    char buffer[BUFFER_SIZE] = {0};
-
-    while(std::getline(input_file, line)){
-        if(send(sockfd, line.c_str(), line.size(), 0) < 0){
-            std::cout << "line = " << line << " SEND FAILED !\n\n";
+    char buffer[BUFFER_SIZE];
+    while (input_file.read(buffer, sizeof(buffer)) || input_file.gcount() > 0) {
+        int bytes_sent = send(sockfd, buffer, input_file.gcount(), 0);
+        if (bytes_sent < 0) {
+            std::cout << "send failed\n";
+            break;
         }
-
-
+        else{
+            std::cout << "file sent succesfuly\n";
+        }
     }
 }
 
 
-
 void Client::connect_to_server(Server server){
-    
+
+    FilesManager files_manager;
+    std::string path = "test";
+
+    files_manager.lookIntoFolder(path);
+
     int sockfd;
     const addrinfo *const_client_addrinfo = &(this->client_addrinfo);
     addrinfo *res;
@@ -68,11 +75,20 @@ void Client::connect_to_server(Server server){
         int client_connect = connect(sockfd, p->ai_addr, p->ai_addrlen);
         if(client_connect < 0)
             std::cout << "client_connect failed\n";
+
+
         
-        char *message = "TEST MESSAGE";
+        // char *message = "TEST MESSAGE";
         // char *message;
         // std::cin.getline(message, BUFFER_SIZE);
-        send(sockfd, message, sizeof(message), 0);
+
+        for(auto i: files_manager.get_files_vector()){
+            std::cout << "for\n";
+            this->transfer_file(i, sockfd);
+        }
+
+
+        // send(sockfd, message, sizeof(message), 0);
         
 
         // if(message == "4")
