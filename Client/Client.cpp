@@ -34,7 +34,27 @@ Server::Server(){
 }
 
 
+void Client::transfer_file(File file, int sockfd){
+    std::filesystem::directory_entry file_path = file.get_path();
+
+    std::ifstream input_file(file_path.path());
+    std::string line;
+
+    char buffer[BUFFER_SIZE] = {0};
+
+    while(std::getline(input_file, line)){
+        if(send(sockfd, line.c_str(), line.size(), 0) < 0){
+            std::cout << "line = " << line << " SEND FAILED !\n\n";
+        }
+
+
+    }
+}
+
+
+
 void Client::connect_to_server(Server server){
+    
     int sockfd;
     const addrinfo *const_client_addrinfo = &(this->client_addrinfo);
     addrinfo *res;
@@ -55,8 +75,8 @@ void Client::connect_to_server(Server server){
         send(sockfd, message, sizeof(message), 0);
         
 
-        if(message == "4")
-            close(sockfd);
+        // if(message == "4")
+        //     close(sockfd);
     }
 
 }
@@ -65,17 +85,9 @@ int main(void){
     
     Server server;
     
-    auto start = std::chrono::high_resolution_clock::now();
+    // auto start = std::chrono::high_resolution_clock::now();
 
     Client client;
     client.connect_to_server(server);
     
-    // for(int i = 0; i < 500; i ++){
-    //     Client client;
-    //     client.connect_to_server(server);
-    // }
-
-    auto stop = std::chrono::high_resolution_clock::now();
-
-    std::cout << "\ntime took = " << stop - start;
 }

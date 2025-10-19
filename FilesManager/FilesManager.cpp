@@ -19,6 +19,7 @@ void FilesManager::lookIntoFolder(std::string analyzed_folder_path){
             
             std::cout << file << "; file size = "<< std::filesystem::file_size(file) << ";;;; and last write time = " << last_write_time_to_string(std::filesystem::last_write_time(file)) <<"\n\n";
             std::cout << "file type = " << typeid(file).name() << " file size type = " << typeid(std::filesystem::file_size(file)).name() << " std::string\n\n";
+            std::cout << "qqqqqqqqqqqq = " << file.path() << "\n\n\n\n\n";
 
             File file_obj(file, std::filesystem::file_size(file), std::filesystem::last_write_time(file));
             

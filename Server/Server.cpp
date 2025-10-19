@@ -58,6 +58,27 @@ void Server::start_server(){
 
 }
 
+void write_file(int client_sock){
+    std::ofstream ofstream_file("test_file.txt", std::ofstream::out | std::ofstream::app | std::ofstream::binary);
+    char buffer[BUFFER_SIZE] = {0};
+
+    while(true){
+        int n = recv(client_sock, buffer, sizeof(buffer), 0);
+        if(n < 0){
+            std::cout << "No more recv \n";
+            break;
+        }
+        else{
+            ofstream_file.write(buffer, sizeof(buffer));
+        }
+
+
+    }
+    
+
+
+}
+
 void Server::handle_connection(int sockfd){
     int client_sock = accept(sockfd, nullptr, nullptr);
         if(client_sock < 0){

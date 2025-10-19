@@ -6,3 +6,7 @@ File::File(std::filesystem::directory_entry path, uintmax_t file_size, std::file
             this->file_size = file_size;
             this->file_last_write_time = file_last_write_time;
 }
+
+std::filesystem::directory_entry File::get_path(){
+    return this->path;
+}

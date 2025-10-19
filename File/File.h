@@ -13,4 +13,6 @@ class File{
     public:
         File(std::filesystem::directory_entry path, uintmax_t file_size, std::filesystem::file_time_type file_last_write_time);
 
+        std::filesystem::directory_entry get_path();
+
 };

@@ -5,7 +5,10 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-#include "/home/vox/Desktop/cpp/SkyBox/Server/Server.h"
+#include <fstream>
+#include "../Server/Server.h"
+#include "../File/File.h"
+
 
 extern const int PORT;
 int BUFFER_SIZE = 1024;
@@ -21,5 +24,7 @@ class Client{
         Client();
 
         void connect_to_server(Server server);
+
+        void transfer_file(File f, int sockfd);
         
 };

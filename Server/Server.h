@@ -6,6 +6,8 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <thread>
+#include <fstream>
+#define BUFFER_SIZE 1024
 
 const std::string LOCALHOST = "127.0.0.1";
 
