@@ -18,8 +18,10 @@ sockaddr* Server::get_ai_addr(){
 }
 
 
-void write_file(int client_sock){
-    std::ofstream ofstream_file("./test_file.txt", std::ofstream::binary);
+void write_file(int client_sock, char *file_name){
+
+    std::string file_name_string = file_name;
+    std::ofstream ofstream_file("./files_from_client/" + file_name_string, std::ofstream::binary);
     char buffer[1024] = {0};
 
     if (!ofstream_file.is_open()) {
@@ -68,15 +70,33 @@ void Server::start_server(){
     std::cout << "client_sockaddr_in.sin_addr.s_addr = " << this->server_sockaddr_in.sin_addr.s_addr << "\n";
 
 
+
     while(1){ // NEED TO IMPLEMENT MULTITHREADING PROPERLY
         int client_sock = accept(sockfd, nullptr, nullptr);
         if(client_sock < 0)
             std::cout << "client_sock (accepting connection) FAILED\n";
         else{
+
+            char file_name[1024];
+            std::string file_name_received_string;
+            int file_name_received = recv(client_sock, file_name, 1024, 0);
+            if(file_name_received <= 0){
+                std::cout << "file name received failed\n";
+            }
+            else{
+                // std::string file_name_received_string (file_name, file_name_received);
+                std::cout << "file_name = " << file_name << "\n";
+            }
+            
+            
             char buffer[1024];
             std::cout <<"accepting connection is OK\n";
             // recv(client_sock, buffer, sizeof(buffer), 0);
-            write_file(client_sock);
+
+            std::cout << "file_name_received = " << file_name_received << "\n";
+            std::cout << "file_name_received_string = " << file_name_received_string << "\n\n";
+
+            write_file(client_sock, file_name);
             std::cout << "Message from client = " << buffer << "\n";
         }
 
@@ -89,6 +109,7 @@ void Server::start_server(){
 }
 
 
+// not using it anymore
 void Server::handle_connection(int sockfd){
     int client_sock = accept(sockfd, nullptr, nullptr);
         if(client_sock < 0){
@@ -99,7 +120,7 @@ void Server::handle_connection(int sockfd){
             char buffer[1024];
             std::cout <<"accepting connection is OK\n";
             // recv(client_sock, buffer, sizeof(buffer), 0);
-            write_file(client_sock);
+            write_file(client_sock, "q.txt");
             std::cout << "Message from client = " << buffer << "\n";
         }
 }

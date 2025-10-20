@@ -54,6 +54,15 @@ void Client::transfer_file(File file, int sockfd) {
     }
 }
 
+void Client::send_filename(File file, int sockfd, std::string file_name){
+    if(send(sockfd, file_name.c_str(), file_name.length(), 0) < 0){
+        std::cout << "filename sent failed\n";
+    }
+    else{
+        std::cout << "filename sent succesfully\n";
+    }
+}
+
 
 void Client::connect_to_server(Server server){
 
@@ -84,6 +93,7 @@ void Client::connect_to_server(Server server){
 
         for(auto i: files_manager.get_files_vector()){
             std::cout << "for\n";
+            this->send_filename(i, sockfd, "file_name_test");
             this->transfer_file(i, sockfd);
         }
 

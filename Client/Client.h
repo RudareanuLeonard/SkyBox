@@ -28,5 +28,7 @@ class Client{
         void connect_to_server(Server server);
 
         void transfer_file(File f, int sockfd);
+
+        void send_filename(File f, int sockfd, std::string file_name);
         
 };
