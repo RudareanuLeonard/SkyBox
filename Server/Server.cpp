@@ -21,7 +21,21 @@ sockaddr* Server::get_ai_addr(){
 void write_file(int client_sock, char *file_name){
 
     std::string file_name_string = file_name;
-    std::ofstream ofstream_file("./files_from_client/" + file_name_string, std::ofstream::binary);
+
+    std::cout << "file name string = " << file_name_string << "\n";
+    
+    std::string base_dir = "./files_from_client/";
+    std::string relative_path = file_name;
+    std::string full_path = base_dir + relative_path;
+
+    // std::experimental::filesystem::create_directory(
+    //     std::experimental::filesystem::path(full_path).parent_path()
+    // );
+        std::filesystem::create_directories(std::filesystem::path(full_path).parent_path());
+
+    
+
+    std::ofstream ofstream_file(full_path, std::ofstream::binary);
     char buffer[1024] = {0};
 
     if (!ofstream_file.is_open()) {

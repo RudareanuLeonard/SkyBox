@@ -1,4 +1,4 @@
 #! /bin/bash
 
-g++ Server.* -o server
+g++ -std=c++20 Server.* -o server
 

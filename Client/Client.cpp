@@ -64,7 +64,7 @@ void Client::send_filename(File file, int sockfd, std::string file_name){
 }
 
 
-void Client::connect_to_server(Server server){
+void Client::connect_to_server(Server server){ //TO DO: add file boundaries (length of each file so you know when to create another file)
 
     FilesManager files_manager;
     std::string path = "test";
@@ -93,7 +93,8 @@ void Client::connect_to_server(Server server){
 
         for(auto i: files_manager.get_files_vector()){
             std::cout << "for\n";
-            this->send_filename(i, sockfd, "file_name_test");
+            std::cout << "i = " << i.get_path() << "\n\n";
+            this->send_filename(i, sockfd, i.get_path().path().string()); // i.get_path().path().string()i.get_path().path().string() + "\0")
             this->transfer_file(i, sockfd);
         }
 
