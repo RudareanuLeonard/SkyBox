@@ -20,6 +20,8 @@ sockaddr* Server::get_ai_addr(){
 
 void write_file(int client_sock, char *file_name){
 
+    std::cout <<"\n im am write_file method\n";
+
     std::string file_name_string = file_name;
 
     std::cout << "file name string = " << file_name_string << "\n";
@@ -43,6 +45,8 @@ void write_file(int client_sock, char *file_name){
 
     }
 
+    memset(buffer, 0, sizeof(buffer)); // free buffer before loop
+    
     while(true){
         int n = recv(client_sock, buffer, sizeof(buffer), 0);
         if(n <= 0){
@@ -50,7 +54,7 @@ void write_file(int client_sock, char *file_name){
             break;
         }
         else{
-            std::cout << "recv received \n";
+            std::cout << "\n\n recv received;;;;; buffer = " << buffer << "\n";
             ofstream_file.write(buffer, n);
         }
 
@@ -85,13 +89,14 @@ void Server::start_server(){
 
 
 
-    while(1){ // NEED TO IMPLEMENT MULTITHREADING PROPERLY
+    while(1){
+        std::cout <<"\n\n im in while \n\n";
         int client_sock = accept(sockfd, nullptr, nullptr);
         if(client_sock < 0)
             std::cout << "client_sock (accepting connection) FAILED\n";
         else{
 
-            char file_name[1024];
+            char file_name[1024] = {0};
             std::string file_name_received_string;
             int file_name_received = recv(client_sock, file_name, 1024, 0);
             if(file_name_received <= 0){
@@ -99,11 +104,13 @@ void Server::start_server(){
             }
             else{
                 // std::string file_name_received_string (file_name, file_name_received);
+                file_name[file_name_received] = '\0';
                 std::cout << "file_name = " << file_name << "\n";
             }
             
             
-            char buffer[1024];
+            char buffer[1024] = {0};
+            memset(buffer, 0, sizeof(buffer));
             std::cout <<"accepting connection is OK\n";
             // recv(client_sock, buffer, sizeof(buffer), 0);
 
@@ -111,7 +118,7 @@ void Server::start_server(){
             std::cout << "file_name_received_string = " << file_name_received_string << "\n\n";
 
             write_file(client_sock, file_name);
-            std::cout << "Message from client = " << buffer << "\n";
+            // std::cout << "Message from client = " << buffer << "\n";
         }
 
         // std::thread t_acc_conn(&Server::handle_connection, this, sockfd);
@@ -121,24 +128,6 @@ void Server::start_server(){
     }
 
 }
-
-
-// not using it anymore
-void Server::handle_connection(int sockfd){
-    int client_sock = accept(sockfd, nullptr, nullptr);
-        if(client_sock < 0){
-            // std::cout << "client_sock (accepting connection) FAILED\n";
-            std::exit(0);
-        }
-        else{
-            char buffer[1024];
-            std::cout <<"accepting connection is OK\n";
-            // recv(client_sock, buffer, sizeof(buffer), 0);
-            write_file(client_sock, "q.txt");
-            std::cout << "Message from client = " << buffer << "\n";
-        }
-}
-
 
 
 int main(void){
