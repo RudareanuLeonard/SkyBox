@@ -18,16 +18,31 @@ sockaddr* Server::get_ai_addr(){
 }
 
 
-void write_file(int client_sock, char *file_name){
+void write_file(int client_sock, int file_name_len, char *file_name){
 
     std::cout <<"\n im am write_file method\n";
 
-    std::string file_name_string = file_name;
 
-    std::cout << "file name string = " << file_name_string << "\n";
+    std::cout << "file_name = " << file_name << "\n";
+    std::cout <<"\n\n\n\n going through file_name char:\n";
+
+    std::string relative_path = "";
+
+    for(int i = 0; i < file_name_len; i++){
+        std::cout << "i = " << i << "and file_name[i] = " << file_name[i] << "\n";
+        relative_path += file_name[i];
+    }
+
+    std::cout << "relative path = " << relative_path << "\n\n";
+
+
+
+    // std::string file_name_string = file_name;
+
+    // std::cout << "file name string = " << file_name_string << "\n";
     
     std::string base_dir = "./files_from_client/";
-    std::string relative_path = file_name;
+    // std::string relative_path = file_name;
     std::string full_path = base_dir + relative_path;
 
     // std::experimental::filesystem::create_directory(
@@ -45,6 +60,16 @@ void write_file(int client_sock, char *file_name){
 
     }
 
+    std::string buffer_string = "";
+    std::cout <<"\n\nbuffer incoming:";
+
+    for(int i = file_name_len; i < strlen(file_name); i += 1){
+        std::cout << "buffer_string[i] = " << file_name[i] << "\n";
+        buffer_string += file_name[i];
+    }
+
+    ofstream_file.write(buffer_string.c_str(), buffer_string.size());
+
     memset(buffer, 0, sizeof(buffer)); // free buffer before loop
     
     while(true){
@@ -54,7 +79,7 @@ void write_file(int client_sock, char *file_name){
             break;
         }
         else{
-            std::cout << "\n\n recv received;;;;; buffer = " << buffer << "\n";
+            std::cout << "\n\nbuffer = " << buffer << "\n";
             ofstream_file.write(buffer, n);
         }
 
@@ -96,8 +121,25 @@ void Server::start_server(){
             std::cout << "client_sock (accepting connection) FAILED\n";
         else{
 
+            //receive file name len
+            int file_name_len = 0;
+            int received_file_name = recv(client_sock, &file_name_len, sizeof(file_name_len), 0);
+            if(received_file_name < 0){
+                std::cout << "file name len failed to receive\n\n";
+            }
+            else{
+                // std::cout << "file name len = " << file_name_len << "\n\n";
+                // continue;
+                std::cout << "\n";
+            }
+            
+
+
             char file_name[1024] = {0};
+            
             std::string file_name_received_string;
+
+
             int file_name_received = recv(client_sock, file_name, 1024, 0);
             if(file_name_received <= 0){
                 std::cout << "file name received failed\n";
@@ -105,19 +147,19 @@ void Server::start_server(){
             else{
                 // std::string file_name_received_string (file_name, file_name_received);
                 file_name[file_name_received] = '\0';
-                std::cout << "file_name = " << file_name << "\n";
+                // std::cout << "file_name = " << file_name << "\n";
             }
             
             
             char buffer[1024] = {0};
             memset(buffer, 0, sizeof(buffer));
-            std::cout <<"accepting connection is OK\n";
+            // std::cout <<"accepting connection is OK\n";
             // recv(client_sock, buffer, sizeof(buffer), 0);
 
-            std::cout << "file_name_received = " << file_name_received << "\n";
-            std::cout << "file_name_received_string = " << file_name_received_string << "\n\n";
+            // std::cout << "file_name_received = " << file_name_received << "\n";
+            // std::cout << "file_name_received_string = " << file_name_received_string << "\n\n";
 
-            write_file(client_sock, file_name);
+            write_file(client_sock, file_name_len, file_name);
             // std::cout << "Message from client = " << buffer << "\n";
         }
 
