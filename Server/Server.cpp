@@ -24,8 +24,9 @@ std::string get_short_path(std::string current_path, std::string server_path){
     return short_path;
 }
 
-void Server::check_if_file_on_server(File f){
+bool check_if_file_on_server(std::string file_path_string){
 
+    std::cout << "\n\nCHECK IF FILE ON SERVER METHOD\n\n";
 
     std::string server_path = "../Server/files_from_client/";
 
@@ -38,12 +39,25 @@ for (const auto& file : std::filesystem::recursive_directory_iterator(server_pat
 
     if(file.is_regular_file() == 1){
         std::cout << "short path = " << get_short_path(file.path().string(), server_path) << "\n\n";
-
+        std::string short_path = get_short_path(file.path().string(), server_path);
+        if(short_path == file_path_string){
+            std::cout << "FILE " << file << " IS ON SERVER!\n\n";
+            return true;
+        }
     }
 }
 
+return false;
 }
 
+/*
+DONE:
+CHECK IF FILE IS ALREADY ON SERVER
+
+TO DO:
+IF FILE IS NOT ON SERVER -> WRITE IT
+IF FILE IS ON SERVER -> CHECK LAST MODIFY DATE; IF IT IS NOT MODIFIED, DOES NOT WRITE FILE; IF IT IS MODIFIED, WRITE FILE               
+*/
 
 
 void write_file(int client_sock, int file_name_len, char *file_name){
@@ -63,6 +77,9 @@ void write_file(int client_sock, int file_name_len, char *file_name){
 
     std::cout << "relative path = " << relative_path << "\n\n";
 
+    
+    if(check_if_file_on_server(relative_path) == true)
+        std::cout << "FILE IS ON SERVER!";
 
 
     // std::string file_name_string = file_name;
@@ -109,8 +126,10 @@ void write_file(int client_sock, int file_name_len, char *file_name){
             break;
         }
         else{
-            std::cout << "\n\nbuffer = " << buffer << "\n";
-            ofstream_file.write(buffer, n);
+            if(check_if_file_on_server(relative_path) == false){
+                std::cout << "\n\nbuffer = " << buffer << "\n";
+                ofstream_file.write(buffer, n);
+            }
         }
 
 

@@ -32,5 +32,5 @@ class Server{
     void start_server();
     sockaddr* get_ai_addr();
     void handle_connection(int sockfd);
-    void check_if_file_on_server(File f);
+    // bool check_if_file_on_server(std::string file_path_string);
 };
