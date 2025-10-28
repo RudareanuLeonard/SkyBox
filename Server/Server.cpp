@@ -13,9 +13,37 @@ Server::Server(){
     server_addrinfo.ai_addr = (struct sockaddr *)&server_sockaddr_in;
 }
 
+
 sockaddr* Server::get_ai_addr(){
     return this->server_addrinfo.ai_addr;
 }
+
+std::string get_short_path(std::string current_path, std::string server_path){
+    std::string short_path = current_path.erase(0, server_path.length());
+
+    return short_path;
+}
+
+void Server::check_if_file_on_server(File f){
+
+
+    std::string server_path = "../Server/files_from_client/";
+
+    if(!std::filesystem::exists(server_path))
+        std::cout << "FILE DOES NOT EXIST \n";
+
+
+for (const auto& file : std::filesystem::recursive_directory_iterator(server_path)){
+    std::cout << "file is = " << file << "\n\n";
+
+    if(file.is_regular_file() == 1){
+        std::cout << "short path = " << get_short_path(file.path().string(), server_path) << "\n\n";
+
+    }
+}
+
+}
+
 
 
 void write_file(int client_sock, int file_name_len, char *file_name){
@@ -71,6 +99,8 @@ void write_file(int client_sock, int file_name_len, char *file_name){
     ofstream_file.write(buffer_string.c_str(), buffer_string.size());
 
     memset(buffer, 0, sizeof(buffer)); // free buffer before loop
+
+    
     
     while(true){
         int n = recv(client_sock, buffer, sizeof(buffer), 0);
@@ -176,7 +206,7 @@ int main(void){
     std::cout << "Hello, there is Server.cpp file. I am gonna start a server...\n\n";
 
     Server server;
-
+    // server.check_if_file_on_server();
     server.start_server();
 
     std::cout << "Server closed!";

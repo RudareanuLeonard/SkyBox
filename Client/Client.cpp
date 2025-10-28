@@ -92,6 +92,8 @@ void Client::connect_to_server(Server server){ //TO DO: add file boundaries (len
             std::cout <<"i = " << i.get_path().path().string().length() << "\n\n";
 
             int name_len = i.get_path().path().string().length();
+
+            // i.last_write_time();
             
             send(sockfd, &name_len, sizeof(name_len), 0);
             this->send_filename(i, sockfd, i.get_path().path().string());

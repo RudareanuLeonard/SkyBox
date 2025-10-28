@@ -8,6 +8,8 @@
 #include <thread>
 #include <fstream>
 #include <filesystem>
+
+#include "../File/File.h"
 // #define BUFFER_SIZE 1024
 
 const std::string LOCALHOST = "127.0.0.1";
@@ -30,5 +32,5 @@ class Server{
     void start_server();
     sockaddr* get_ai_addr();
     void handle_connection(int sockfd);
-
+    void check_if_file_on_server(File f);
 };

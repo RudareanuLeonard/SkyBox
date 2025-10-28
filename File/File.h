@@ -15,4 +15,6 @@ class File{
 
         std::filesystem::directory_entry get_path();
 
+        void last_write_time();
+
 };
